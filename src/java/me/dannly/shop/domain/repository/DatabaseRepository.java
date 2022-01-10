@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import me.dannly.shop.domain.repository.factory.Conex;
@@ -22,12 +23,14 @@ public abstract class DatabaseRepository<T> {
     private PreparedStatement insertOrUpdate, delete, query;
     private final String queryString;
 
-    public DatabaseRepository(String insertOrUpdate, String delete, String query) {
+    public DatabaseRepository(String create, String insertOrUpdate, String delete, String query) {
         queryString = query;
-        try {
+        try(final Statement createStatement = connection.createStatement()) {
             this.insertOrUpdate = connection.prepareStatement(insertOrUpdate);
             this.delete = connection.prepareStatement(delete);
             this.query = connection.prepareStatement(query);
+            createStatement.execute(create);
+            createStatement.close();
         } catch (SQLException ex) {
         }
     }
