@@ -32,6 +32,7 @@ public abstract class DatabaseRepository<T> {
             createStatement.execute(create);
             createStatement.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 
